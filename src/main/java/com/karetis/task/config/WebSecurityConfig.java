@@ -1,19 +1,12 @@
 package com.karetis.task.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -23,15 +16,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     public static final String TOKEN_HOME = "/";
 
     @Autowired
-    private DataSource dataSource;
+    private CustomAuthenticationProvider authProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         //@formatter:off
         http
-                .httpBasic()
-                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -39,22 +30,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .antMatchers(TOKEN_HOME).permitAll()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
         ;
     }
 
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select USERNAME, PASSWORD from EMPLOYEE where USERNAME=?");
+        auth.authenticationProvider(authProvider);
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
 
 }
