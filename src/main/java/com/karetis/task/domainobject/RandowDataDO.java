@@ -16,11 +16,7 @@ public class RandowDataDO
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRandowData;
-
-    @Column(nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime dateCreated = ZonedDateTime.now();
+    private Long idRandomData;
 
     @Column(nullable = false)
     private BigInteger random1;

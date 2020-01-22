@@ -4,6 +4,7 @@ import com.karetis.task.dataaccessobject.RandowDataRepository;
 import com.karetis.task.domainobject.RandowDataDO;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
@@ -32,8 +33,6 @@ public class RandomDataService {
         return result;
     }
 
-
-    @Transactional
     public String saveRandomData(){
 
         randowDataRepository.deleteAll();
@@ -45,6 +44,11 @@ public class RandomDataService {
             randowDataDO.setRandom2(getRandomBigInteger());
             randowDataDO.setRandom3(getRandomBigInteger());
             randowDataRepository.save(randowDataDO);
+
+            if (i%2000 ==0){
+                entityManager.flush();
+                entityManager.clear();
+            }
 
         }
 

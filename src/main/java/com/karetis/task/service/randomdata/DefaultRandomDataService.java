@@ -3,6 +3,8 @@ package com.karetis.task.service.randomdata;
 import com.karetis.task.dataaccessobject.RandowDataRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 
 @Service
 public class DefaultRandomDataService extends RandomDataService {
@@ -13,6 +15,7 @@ public class DefaultRandomDataService extends RandomDataService {
     }
 
     @Override
+    @Transactional
     public String saveRandomData() {
         return super.saveRandomData();
     }

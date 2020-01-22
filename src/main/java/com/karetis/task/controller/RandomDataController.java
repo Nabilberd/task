@@ -16,8 +16,8 @@ public class RandomDataController {
     }
 
     @GetMapping("/randomData")
-    public void home() {
-        randomDataService.saveRandomData();
+    public String home() {
+        return randomDataService.saveRandomData();
     }
 
 }
